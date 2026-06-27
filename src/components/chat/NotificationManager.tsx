@@ -23,7 +23,7 @@ export default function NotificationManager() {
     // We can use the existing subscribeToChats, since it fetches the user's chats and lastMessage
     const unsub = subscribeToChats(currentUserId, (chats) => {
       chats.forEach(chat => {
-        const lastMsgTime = chat.lastMessage?.createdAt?.getTime() || 0;
+        const lastMsgTime = chat.lastMessage?.sentAt?.getTime() || 0;
         const prevTime = previousChatsRef.current[chat.id] || 0;
         
         // If this is a newly arrived message (timestamp is newer) and it's not from us

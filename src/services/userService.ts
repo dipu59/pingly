@@ -31,6 +31,7 @@ function docToUser(id: string, data: DocumentData): User {
     pinnedChats: data.pinnedChats ?? [],
     archivedChats: data.archivedChats ?? [],
     activeChatId: data.activeChatId ?? null,
+    fcmTokens: data.fcmTokens ?? [],
   };
 }
 
