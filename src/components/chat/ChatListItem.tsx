@@ -40,7 +40,7 @@ export default function ChatListItem({ chat, currentUserId, onClick }: ChatListI
   const previewText = lastMsg
     ? lastMsg.type === 'image' ? '📷 Photo'
     : lastMsg.type === 'voice' ? '🎤 Voice note'
-    : truncate(lastMsg.text, 38)
+    : truncate(lastMsg.text ?? '', 38)
     : 'No messages yet';
 
   const unreadCount = chat.unreadCount?.[currentUserId] || 0;

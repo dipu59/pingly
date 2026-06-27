@@ -10,7 +10,7 @@ import {
   subscribeToTyping,
   markMessagesAsSeen,
 } from '@/services/chatService';
-import { subscribeToUser, blockUser, unblockUser } from '@/services/userService';
+import { subscribeToUser } from '@/services/userService';
 import { db, doc, onSnapshot } from '@/lib/firebase/firestore';
 import { getInitials } from '@/lib/utils';
 import type { Message, Chat } from '@/types/chat';
@@ -129,7 +129,7 @@ export default function ChatWindow({ chatId, otherUserId: otherUserIdProp }: Cha
   const filteredMessages = messages.filter((m) => {
     if (!searchQuery) return true;
     if (m.type !== 'text') return false;
-    return m.text.toLowerCase().includes(searchQuery.toLowerCase());
+    return (m.text ?? '').toLowerCase().includes(searchQuery.toLowerCase());
   });
 
   return (

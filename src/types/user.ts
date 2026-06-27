@@ -8,7 +8,6 @@ export interface User {
   lastSeen: Date | null;
   createdAt: Date;
   fcmTokens?: string[];
-  blockedUsers: string[];
   pinnedChats: string[];
   archivedChats: string[];
 }

@@ -7,6 +7,8 @@ export interface Message {
   imageUrl?: string;
   audioUrl?: string;
   duration?: number;
+  mediaURL?: string;
+  mediaType?: 'image' | 'voice';
   type: MessageType;
   sentAt: Date;
   seenBy: string[];

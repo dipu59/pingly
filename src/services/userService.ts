@@ -28,7 +28,6 @@ function docToUser(id: string, data: DocumentData): User {
     isOnline: data.isOnline ?? false,
     lastSeen: toDate(data.lastSeen),
     createdAt: toDate(data.createdAt) ?? new Date(),
-    blockedUsers: data.blockedUsers ?? [],
     pinnedChats: data.pinnedChats ?? [],
     archivedChats: data.archivedChats ?? [],
   };

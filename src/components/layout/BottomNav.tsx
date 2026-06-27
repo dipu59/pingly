@@ -23,7 +23,7 @@ export default function BottomNav() {
     >
       {TABS.map(({ href, icon: Icon, label }) => {
         const isActive = href === '/chat'
-          ? pathname.startsWith('/chat')
+          ? (pathname ?? '').startsWith('/chat')
           : pathname === href;
 
         return (

@@ -59,7 +59,7 @@ export default function Sidebar() {
       <nav className="flex flex-1 flex-col items-center gap-1" aria-label="Main navigation">
         {NAV_ITEMS.map(({ href, icon: Icon, label }) => {
           const isActive = href === '/chat'
-            ? pathname.startsWith('/chat')
+            ? (pathname ?? '').startsWith('/chat')
             : pathname === href;
 
           return (
