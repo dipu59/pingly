@@ -3,7 +3,6 @@ import {
   signUpWithEmail,
   signInWithGoogle,
   logout,
-  getGoogleRedirectResult,
 } from '@/lib/firebase/auth';
 import { db } from '@/lib/firebase/firestore';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
@@ -46,12 +45,7 @@ export async function registerWithEmail(
 }
 
 export async function loginWithGoogle() {
-  // Initiates redirect, page will navigate away
-  await signInWithGoogle();
-}
-
-export async function handleGoogleRedirect() {
-  const cred = await getGoogleRedirectResult();
+  const cred = await signInWithGoogle();
   if (cred?.user) {
     // setDoc with merge handles both new and returning Google users
     await setDoc(

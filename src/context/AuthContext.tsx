@@ -11,7 +11,6 @@ import { onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth';
 import { auth } from '@/lib/firebase/config';
 import { db } from '@/lib/firebase/firestore';
 import { doc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
-import { handleGoogleRedirect } from '@/services/authService';
 import { subscribeToUser } from '@/services/userService';
 import type { User as AppUser } from '@/types/user';
 
@@ -67,9 +66,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    // Process redirect result if coming back from Google Sign-In
-    handleGoogleRedirect().catch(console.error);
-
     let userUnsub: (() => void) | undefined;
 
     const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import AuthGuard from '@/components/auth/AuthGuard';
 
 export const metadata: Metadata = {
   title: 'Sign in — Pingly',
@@ -28,7 +29,11 @@ export default function AuthLayout({
           backgroundSize: '40px 40px',
         }}
       />
-      <div className="relative z-10 w-full max-w-md px-4">{children}</div>
+      <div className="relative z-10 w-full max-w-md px-4">
+        <AuthGuard redirectIfAuthed={true}>
+          {children}
+        </AuthGuard>
+      </div>
     </div>
   );
 }
