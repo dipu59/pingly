@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Phone, Video, Search, MoreVertical } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
@@ -12,7 +12,7 @@ import {
 } from '@/services/chatService';
 import { subscribeToUser } from '@/services/userService';
 import { db, doc, onSnapshot } from '@/lib/firebase/firestore';
-import { getInitials } from '@/lib/utils';
+import { getInitials, cn } from '@/lib/utils';
 import type { Message, Chat } from '@/types/chat';
 import type { User } from '@/types/user';
 import MessageBubble from './MessageBubble';
@@ -27,6 +27,8 @@ interface ChatWindowProps {
 
 export default function ChatWindow({ chatId, otherUserId: otherUserIdProp }: ChatWindowProps) {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { user } = useAuth();
   const [chat, setChat] = useState<Chat | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -151,34 +153,48 @@ export default function ChatWindow({ chatId, otherUserId: otherUserIdProp }: Cha
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
-        {/* Avatar */}
-        <div className="relative flex-shrink-0">
-          <div
-            className="h-9 w-9 rounded-full overflow-hidden flex items-center justify-center text-sm font-semibold"
-            style={{ background: 'var(--color-violet-muted)', color: 'var(--color-violet-light)' }}
-          >
-            {photoURL ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={photoURL} alt={displayName} className="h-full w-full object-cover" />
-            ) : (
-              getInitials(displayName)
+        <button
+          onClick={() => {
+            if (!isGroup && otherUserId) {
+              const params = new URLSearchParams(searchParams?.toString() ?? '');
+              params.set('profile', otherUserId);
+              router.push(`${pathname}?${params.toString()}`, { scroll: false });
+            }
+          }}
+          className={cn(
+            "flex items-center gap-3 min-w-0 transition-opacity flex-1 text-left",
+            !isGroup && "hover:opacity-80 cursor-pointer active:scale-[0.98]"
+          )}
+        >
+          {/* Avatar */}
+          <div className="relative flex-shrink-0">
+            <div
+              className="h-9 w-9 rounded-full overflow-hidden flex items-center justify-center text-sm font-semibold"
+              style={{ background: 'var(--color-violet-muted)', color: 'var(--color-violet-light)' }}
+            >
+              {photoURL ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={photoURL} alt={displayName} className="h-full w-full object-cover" />
+              ) : (
+                getInitials(displayName)
+              )}
+            </div>
+            {isOnline && (
+              <span
+                className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full ring-2"
+                style={{ background: 'var(--color-success)', boxShadow: '0 0 6px rgba(16,185,129,0.5)' }}
+              />
             )}
           </div>
-          {isOnline && (
-            <span
-              className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full ring-2"
-              style={{ background: 'var(--color-success)', boxShadow: '0 0 6px rgba(16,185,129,0.5)' }}
-            />
-          )}
-        </div>
 
-        {/* Name + status */}
-        <div className="flex-1 min-w-0">
-          <h2 className="truncate text-sm font-semibold text-white">{displayName}</h2>
-          <p className="text-xs" style={{ color: isOnline ? 'var(--color-success)' : 'var(--color-text-muted)' }}>
-            {isGroup ? `${groupMemberCount} members` : (isOnline ? '● Online' : 'Offline')}
-          </p>
-        </div>
+          {/* Name + status */}
+          <div className="flex-1 min-w-0">
+            <h2 className="truncate text-sm font-semibold text-white">{displayName}</h2>
+            <p className="text-xs" style={{ color: isOnline ? 'var(--color-success)' : 'var(--color-text-muted)' }}>
+              {isGroup ? `${groupMemberCount} members` : (isOnline ? '● Online' : 'Offline')}
+            </p>
+          </div>
+        </button>
 
         {/* Action buttons */}
         <div className="flex items-center gap-1">

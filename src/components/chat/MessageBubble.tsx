@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Check, CheckCheck, Trash2, SmilePlus, Reply, Edit2, Copy } from 'lucide-react';
 import { formatChatTime, cn } from '@/lib/utils';
@@ -20,6 +21,9 @@ interface MessageBubbleProps {
 
 export default function MessageBubble({ message, isOwn, chatId, onReply, onEdit }: MessageBubbleProps) {
   const { user } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [showActions, setShowActions] = useState(false);
   const [showReactions, setShowReactions] = useState(false);
   const isDeleted = !!message.deletedAt;
@@ -48,11 +52,10 @@ export default function MessageBubble({ message, isOwn, chatId, onReply, onEdit 
 
   return (
     <motion.div
-      layout
-      initial={{ opacity: 0, y: 10, scale: 0.97 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 10 }}
+      transition={{ duration: 0.25, ease: [0.25, 1, 0.5, 1] }}
       className={cn(
         'group relative flex items-end gap-2',
         isOwn ? 'flex-row-reverse' : 'flex-row',
@@ -98,7 +101,16 @@ export default function MessageBubble({ message, isOwn, chatId, onReply, onEdit 
 
             {/* Image message */}
             {message.type === 'image' && (message.imageUrl || message.mediaURL) && (
-              <div className={cn('overflow-hidden rounded-xl', isOwn ? 'rounded-br-sm' : 'rounded-bl-sm')}>
+              <button 
+                onClick={() => {
+                  const url = message.imageUrl || message.mediaURL;
+                  if (!url) return;
+                  const params = new URLSearchParams(searchParams?.toString() ?? '');
+                  params.set('photo', encodeURIComponent(url));
+                  router.push(`${pathname}?${params.toString()}`, { scroll: false });
+                }}
+                className={cn('overflow-hidden rounded-xl cursor-pointer transition-transform active:scale-[0.98]', isOwn ? 'rounded-br-sm' : 'rounded-bl-sm')}
+              >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={message.imageUrl || message.mediaURL}
@@ -106,7 +118,7 @@ export default function MessageBubble({ message, isOwn, chatId, onReply, onEdit 
                   className="max-h-60 max-w-full object-cover"
                   loading="lazy"
                 />
-              </div>
+              </button>
             )}
 
             {/* Voice message */}

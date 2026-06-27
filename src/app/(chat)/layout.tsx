@@ -3,6 +3,8 @@ import Sidebar from '@/components/layout/Sidebar';
 import BottomNav from '@/components/layout/BottomNav';
 import ChatListPanel from '@/components/chat/ChatListPanel';
 import MobileChatLayout from '@/components/layout/MobileChatLayout';
+import UserProfileModal from '@/components/modals/UserProfileModal';
+import PhotoViewerModal from '@/components/modals/PhotoViewerModal';
 
 export default function ChatLayout({
   children,
@@ -35,6 +37,10 @@ export default function ChatLayout({
         <MobileChatLayout>{children}</MobileChatLayout>
         <BottomNav />
       </div>
+
+      {/* Global URL-driven Modals */}
+      <UserProfileModal />
+      <PhotoViewerModal />
     </AuthGuard>
   );
 }

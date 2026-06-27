@@ -38,9 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         userRef,
         {
           uid: firebaseUser.uid,
-          displayName: firebaseUser.displayName ?? 'Anonymous',
           email: firebaseUser.email ?? '',
-          photoURL: firebaseUser.photoURL ?? null,
           isOnline: true,
           lastSeen: serverTimestamp(),
         },

@@ -2,8 +2,9 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User as UserIcon, Camera, Loader2, Edit2, Check, X } from 'lucide-react';
+import { User as UserIcon, Camera, Loader2, Edit2, Check, X, LogOut } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { logout } from '@/services/authService';
 import { updateUserProfile, getUserById } from '@/services/userService';
 import { uploadAvatar } from '@/services/cloudinary';
 import { getInitials, cn } from '@/lib/utils';
@@ -295,6 +296,31 @@ export default function ProfilePage() {
             className="shrink-0 rounded-xl bg-violet-600/20 px-4 py-2 text-sm font-medium text-violet-300 hover:bg-violet-600/30 transition-colors border border-violet-500/20"
           >
             Enable
+          </button>
+        </div>
+      </div>
+      
+      {/* Account Settings / Logout */}
+      <div className="mx-auto w-full max-w-lg glass rounded-2xl p-8 mt-6 mb-12">
+        <h2 className="text-lg font-bold text-red-400 mb-4">Account</h2>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <p className="text-sm font-medium text-white">Sign Out</p>
+            <p className="text-xs text-zinc-400 mt-1">Log out of your account on this device.</p>
+          </div>
+          <button
+            onClick={async () => {
+              try {
+                await logout();
+              } catch (err) {
+                console.error('Logout failed:', err);
+                alert('Failed to log out.');
+              }
+            }}
+            className="shrink-0 flex items-center gap-2 rounded-xl bg-red-600/10 px-4 py-2 text-sm font-medium text-red-400 hover:bg-red-600/20 transition-colors border border-red-500/20"
+          >
+            <LogOut className="h-4 w-4" />
+            Logout
           </button>
         </div>
       </div>

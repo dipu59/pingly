@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Check, CheckCheck, MoreHorizontal, Pin, PinOff, Archive, ArchiveRestore } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { subscribeToUser, togglePinChat, toggleArchiveChat } from '@/services/userService';
@@ -18,6 +18,8 @@ interface ChatListItemProps {
 export default function ChatListItem({ chat, currentUserId, onClick }: ChatListItemProps) {
   const { user } = useAuth();
   const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [otherUser, setOtherUser] = useState<User | null>(null);
   const [showMenu, setShowMenu] = useState(false);
   const isActive = pathname === `/chat/${chat.id}`;
@@ -67,8 +69,20 @@ export default function ChatListItem({ chat, currentUserId, onClick }: ChatListI
             <Pin className="h-3 w-3" style={{ fill: 'var(--color-violet)', color: 'var(--color-violet)' }} />
           </div>
         )}
-        <div
-          className="h-11 w-11 rounded-full overflow-hidden flex items-center justify-center text-sm font-semibold"
+        <button
+          onClick={(e) => {
+            if (chat.type === 'direct' && otherUser?.uid) {
+              e.stopPropagation();
+              e.preventDefault();
+              const params = new URLSearchParams(searchParams?.toString() ?? '');
+              params.set('profile', otherUser.uid);
+              router.push(`${pathname}?${params.toString()}`, { scroll: false });
+            }
+          }}
+          className={cn(
+            "h-11 w-11 rounded-full overflow-hidden flex items-center justify-center text-sm font-semibold transition-transform",
+            chat.type === 'direct' && "hover:ring-2 hover:ring-violet-500 hover:ring-offset-2 hover:ring-offset-zinc-900 active:scale-95 cursor-pointer"
+          )}
           style={{
             background: 'var(--color-violet-muted)',
             color: 'var(--color-violet-light)',
@@ -80,7 +94,7 @@ export default function ChatListItem({ chat, currentUserId, onClick }: ChatListI
           ) : (
             getInitials(displayName)
           )}
-        </div>
+        </button>
         {/* Online indicator */}
         {isOnline && (
           <span

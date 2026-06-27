@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Loader2, MessageSquarePlus } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
@@ -13,6 +13,8 @@ import type { User } from '@/types/user';
 export default function PeopleList() {
   const { user } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -111,7 +113,14 @@ export default function PeopleList() {
                 }}
               >
                 {/* Avatar */}
-                <div className="relative mb-4 h-20 w-20 flex-shrink-0">
+                <button
+                  onClick={() => {
+                    const params = new URLSearchParams(searchParams?.toString() ?? '');
+                    params.set('profile', person.uid);
+                    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+                  }}
+                  className="relative mb-4 h-20 w-20 flex-shrink-0 transition-transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-violet-500 rounded-full"
+                >
                   <div
                     className="h-full w-full rounded-full overflow-hidden flex items-center justify-center text-xl font-bold shadow-xl"
                     style={{ background: 'var(--color-violet-muted)', color: 'var(--color-violet-light)' }}
@@ -129,10 +138,19 @@ export default function PeopleList() {
                       style={{ background: 'var(--color-success)' }}
                     />
                   )}
-                </div>
+                </button>
 
                 {/* Info */}
-                <h3 className="text-base font-semibold text-white text-center line-clamp-1">{person.displayName}</h3>
+                <button 
+                  onClick={() => {
+                    const params = new URLSearchParams(searchParams?.toString() ?? '');
+                    params.set('profile', person.uid);
+                    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+                  }}
+                  className="hover:opacity-80 active:scale-95 transition-all outline-none"
+                >
+                  <h3 className="text-base font-semibold text-white text-center line-clamp-1">{person.displayName}</h3>
+                </button>
                 <p className="text-xs mt-1 text-center line-clamp-1" style={{ color: 'var(--color-text-muted)' }}>
                   {person.email}
                 </p>

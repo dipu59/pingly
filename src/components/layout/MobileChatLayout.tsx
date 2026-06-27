@@ -24,7 +24,7 @@ export default function MobileChatLayout({
     <div className="relative flex-1 overflow-hidden">
       {/* Chat List — visible only on the root /chat path */}
       <div
-        className={`absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out ${
+        className={`absolute inset-0 flex flex-col transform-gpu will-change-transform transition-transform duration-[350ms] ease-[cubic-bezier(0.32,0.72,0,1)] ${
           isChatRoot ? 'translate-x-0' : '-translate-x-full'
         }`}
         style={{ background: 'rgba(12,12,14,0.98)' }}
@@ -35,7 +35,7 @@ export default function MobileChatLayout({
 
       {/* Main Content Area (Children) — visible on all other paths (/chat/[id], /people, /profile) */}
       <div
-        className={`absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out ${
+        className={`absolute inset-0 flex flex-col transform-gpu will-change-transform transition-transform duration-[350ms] ease-[cubic-bezier(0.32,0.72,0,1)] ${
           isChatRoot ? 'translate-x-full' : 'translate-x-0'
         }`}
         aria-hidden={isChatRoot}

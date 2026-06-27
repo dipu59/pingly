@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { motion } from 'framer-motion';
 import { MessageSquare, Phone, Users, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -15,12 +16,24 @@ const TABS = [
 export default function BottomNav() {
   const pathname = usePathname();
 
+  const isConversationOpen = pathname?.startsWith('/chat/') && pathname !== '/chat';
+
   return (
-    <nav
-      className="safe-area-pb flex h-16 items-center justify-around border-t glass"
-      style={{ borderColor: 'var(--color-border)' }}
-      aria-label="Mobile navigation"
+    <motion.div
+      initial={false}
+      animate={{
+        height: isConversationOpen ? 0 : 64, // 64px is h-16
+        opacity: isConversationOpen ? 0 : 1,
+        y: isConversationOpen ? 20 : 0,
+      }}
+      transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
+      className="shrink-0 overflow-hidden"
     >
+      <nav
+        className="safe-area-pb flex h-16 w-full items-center justify-around border-t glass"
+        style={{ borderColor: 'var(--color-border)' }}
+        aria-label="Mobile navigation"
+      >
       {TABS.map(({ href, icon: Icon, label }) => {
         const isActive = href === '/chat'
           ? (pathname ?? '').startsWith('/chat')
@@ -49,6 +62,7 @@ export default function BottomNav() {
           </Link>
         );
       })}
-    </nav>
+      </nav>
+    </motion.div>
   );
 }
