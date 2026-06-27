@@ -1,26 +1,199 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ═══════════════════════════════════════════════════════════════
+   PINGLY DESIGN SYSTEM
+   Tailwind v4 — tokens defined via @theme
+═══════════════════════════════════════════════════════════════ */
+
+@theme {
+  /* ── Colors ─────────────────────────────────────── */
+  --color-bg:            #09090B;
+  --color-surface:       #18181B;
+  --color-surface-2:     #27272A;
+  --color-surface-3:     #3F3F46;
+  --color-border:        rgba(255,255,255,0.06);
+  --color-border-strong: rgba(255,255,255,0.10);
+
+  --color-violet:        #8B5CF6;
+  --color-violet-light:  #A78BF7;
+  --color-violet-dark:   #6D28D9;
+  --color-violet-muted:  rgba(139,92,246,0.15);
+  --color-violet-glow:   rgba(139,92,246,0.30);
+
+  --color-cyan:          #06B6D4;
+  --color-cyan-light:    #67E8F9;
+  --color-cyan-muted:    rgba(6,182,212,0.15);
+
+  --color-text-primary:  #FAFAFA;
+  --color-text-secondary: #A1A1AA;
+  --color-text-muted:    #71717A;
+
+  --color-success:       #10B981;
+  --color-success-muted: rgba(16,185,129,0.15);
+  --color-error:         #EF4444;
+  --color-error-muted:   rgba(239,68,68,0.15);
+  --color-warning:       #F59E0B;
+
+  /* ── Fonts ───────────────────────────────────────── */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  /* ── Border Radius ───────────────────────────────── */
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   20px;
+  --radius-2xl:  24px;
+  --radius-full: 9999px;
+
+  /* ── Blur ────────────────────────────────────────── */
+  --blur-glass:  12px;
+  --blur-heavy:  24px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ═══════════════════════════════════════════════════════════════
+   BASE RESET & GLOBAL STYLES
+═══════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  overflow: hidden; /* App shell takes full viewport */
+  height: 100dvh;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GLASSMORPHISM UTILITY CLASSES
+═══════════════════════════════════════════════════════════════ */
+
+.glass {
+  background: rgba(24, 24, 27, 0.70);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  border: 1px solid var(--color-border);
+}
+
+.glass-heavy {
+  background: rgba(9, 9, 11, 0.85);
+  backdrop-filter: blur(var(--blur-heavy));
+  -webkit-backdrop-filter: blur(var(--blur-heavy));
+  border: 1px solid var(--color-border);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GLOW UTILITIES
+═══════════════════════════════════════════════════════════════ */
+
+.glow-violet {
+  box-shadow: 0 0 20px var(--color-violet-glow), 0 0 40px rgba(139,92,246,0.10);
+}
+
+.glow-violet-sm {
+  box-shadow: 0 0 10px var(--color-violet-glow);
+}
+
+.text-glow-violet {
+  text-shadow: 0 0 20px rgba(139,92,246,0.6);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GRADIENT UTILITIES
+═══════════════════════════════════════════════════════════════ */
+
+.gradient-violet {
+  background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+}
+
+.gradient-violet-cyan {
+  background: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #A78BF7 0%, #67E8F9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLLBAR STYLING
+═══════════════════════════════════════════════════════════════ */
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-3);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-violet-muted);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TYPING INDICATOR ANIMATION
+═══════════════════════════════════════════════════════════════ */
+
+@keyframes typing-bounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30%           { transform: translateY(-5px); }
+}
+
+.typing-dot {
+  animation: typing-bounce 1.2s ease-in-out infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* ═══════════════════════════════════════════════════════════════
+   MESSAGE BUBBLE STYLES
+═══════════════════════════════════════════════════════════════ */
+
+/* Outgoing — violet gradient */
+.bubble-out {
+  background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+  color: #fff;
+  border-radius: 18px 18px 4px 18px;
+}
+
+/* Incoming — dark glass */
+.bubble-in {
+  background: rgba(39, 39, 42, 0.90);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: var(--color-text-primary);
+  border-radius: 18px 18px 18px 4px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FOCUS RING OVERRIDE
+═══════════════════════════════════════════════════════════════ */
+
+:focus-visible {
+  outline: 2px solid var(--color-violet);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TRANSITIONS
+═══════════════════════════════════════════════════════════════ */
+
+.transition-base {
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
