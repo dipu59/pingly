@@ -411,6 +411,8 @@ export default function MessageInput({
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
+            onMouseDown={(e) => e.preventDefault()}
+            onTouchStart={(e) => e.preventDefault()}
             onClick={handleSendText}
             disabled={!canSend}
             aria-label="Send message"
