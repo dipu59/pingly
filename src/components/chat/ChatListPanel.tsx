@@ -55,7 +55,7 @@ export default function ChatListPanel() {
     >
       {/* Header */}
       <div
-        className="flex items-center justify-between px-4 py-4 border-b"
+        className="flex shrink-0 items-center justify-between px-4 py-4 border-b"
         style={{ borderColor: "var(--color-border)" }}
       >
         <button
@@ -92,7 +92,7 @@ export default function ChatListPanel() {
       </div>
 
       {/* Search Bar */}
-      <div className="px-3 py-3">
+      <div className="shrink-0 px-3 py-3">
         <div className="relative">
           <Search
             className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"

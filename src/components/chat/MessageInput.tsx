@@ -216,7 +216,7 @@ export default function MessageInput({
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const canSend = text.trim().length > 0 && !sending && !isRecording;
+  const canSend = text.trim().length > 0 && !isRecording;
 
   return (
     <div
@@ -404,7 +404,7 @@ export default function MessageInput({
         </div>
 
         {/* Send button or Voice/Image actions */}
-        {canSend ? (
+        {canSend || sending ? (
           <motion.button
             id="send-btn"
             key="send"
@@ -414,9 +414,12 @@ export default function MessageInput({
             onMouseDown={(e) => e.preventDefault()}
             onTouchStart={(e) => e.preventDefault()}
             onClick={handleSendText}
-            disabled={!canSend}
+            disabled={!canSend || sending}
             aria-label="Send message"
-            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl transition-all duration-150 hover:opacity-90 active:scale-95 glow-violet-sm"
+            className={cn(
+              "flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl transition-all duration-150",
+              sending ? "opacity-50" : "hover:opacity-90 active:scale-95 glow-violet-sm"
+            )}
             style={{ background: 'var(--color-violet)', color: 'white' }}
           >
             <Send className="h-4 w-4" />

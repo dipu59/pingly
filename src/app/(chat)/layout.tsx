@@ -15,7 +15,7 @@ export default function ChatLayout({
   return (
     <AuthGuard>
       {/* Desktop: 3-panel layout */}
-      <div className="hidden h-dvh md:flex">
+      <div className="hidden fixed inset-0 md:flex">
         {/* Nav Rail */}
         <Sidebar />
 
@@ -34,7 +34,7 @@ export default function ChatLayout({
       </div>
 
       {/* Mobile: handled by MobileChatLayout */}
-      <div className="flex h-dvh flex-col md:hidden">
+      <div className="fixed inset-0 flex flex-col md:hidden">
         <MobileChatLayout>{children}</MobileChatLayout>
         <BottomNav />
       </div>

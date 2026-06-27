@@ -47,6 +47,7 @@ export default function InstallPrompt() {
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
+      (window as any).deferredPwaPrompt = e;
       
       const hasDismissed = localStorage.getItem('pwa-prompt-dismissed');
       if (!hasDismissed) {
