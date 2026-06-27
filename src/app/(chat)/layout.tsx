@@ -5,6 +5,7 @@ import ChatListPanel from '@/components/chat/ChatListPanel';
 import MobileChatLayout from '@/components/layout/MobileChatLayout';
 import UserProfileModal from '@/components/modals/UserProfileModal';
 import PhotoViewerModal from '@/components/modals/PhotoViewerModal';
+import NotificationManager from '@/components/chat/NotificationManager';
 
 export default function ChatLayout({
   children,
@@ -38,9 +39,10 @@ export default function ChatLayout({
         <BottomNav />
       </div>
 
-      {/* Global URL-driven Modals */}
+      {/* Global URL-driven Modals & Managers */}
       <UserProfileModal />
       <PhotoViewerModal />
+      <NotificationManager />
     </AuthGuard>
   );
 }

@@ -30,6 +30,7 @@ function docToUser(id: string, data: DocumentData): User {
     createdAt: toDate(data.createdAt) ?? new Date(),
     pinnedChats: data.pinnedChats ?? [],
     archivedChats: data.archivedChats ?? [],
+    activeChatId: data.activeChatId ?? null,
   };
 }
 
@@ -108,5 +109,11 @@ export async function togglePinChat(userId: string, chatId: string, isPinned: bo
 export async function toggleArchiveChat(userId: string, chatId: string, isArchived: boolean) {
   await updateDoc(doc(db, 'users', userId), {
     archivedChats: isArchived ? arrayRemove(chatId) : arrayUnion(chatId),
+  });
+}
+
+export async function setActiveChat(uid: string, chatId: string | null) {
+  await updateDoc(doc(db, 'users', uid), {
+    activeChatId: chatId,
   });
 }

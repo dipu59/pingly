@@ -10,4 +10,5 @@ export interface User {
   fcmTokens?: string[];
   pinnedChats: string[];
   archivedChats: string[];
+  activeChatId?: string | null;
 }

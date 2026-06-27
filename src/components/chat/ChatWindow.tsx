@@ -10,7 +10,7 @@ import {
   subscribeToTyping,
   markMessagesAsSeen,
 } from '@/services/chatService';
-import { subscribeToUser } from '@/services/userService';
+import { subscribeToUser, setActiveChat } from '@/services/userService';
 import { db, doc, onSnapshot } from '@/lib/firebase/firestore';
 import { getInitials, cn } from '@/lib/utils';
 import type { Message, Chat } from '@/types/chat';
@@ -64,6 +64,28 @@ export default function ChatWindow({ chatId, otherUserId: otherUserIdProp }: Cha
       if (other) setOtherUserId(other);
     }
   }, [chat, user, otherUserId]);
+
+  // Set active chat ID in Firestore
+  const currentUserId = user?.uid;
+  useEffect(() => {
+    if (!currentUserId) return;
+    setActiveChat(currentUserId, chatId).catch(console.error);
+
+    // Also set up a visibility change listener to clear it when app goes to background
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        setActiveChat(currentUserId, null).catch(console.error);
+      } else {
+        setActiveChat(currentUserId, chatId).catch(console.error);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      setActiveChat(currentUserId, null).catch(console.error);
+    };
+  }, [chatId, currentUserId]);
 
   // Subscribe to messages
   useEffect(() => {

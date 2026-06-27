@@ -20,6 +20,7 @@ import {
   increment,
 } from 'firebase/firestore';
 import { getChatId } from '@/lib/utils';
+import { getUserById } from './userService';
 import type { Chat, Message, MessageType } from '@/types/chat';
 import type { DocumentData } from 'firebase/firestore';
 
@@ -193,11 +194,36 @@ export async function sendMessage(
   
   if (chatSnap.exists()) {
     const members: string[] = chatSnap.data().members ?? [];
-    members.forEach((m) => {
+    
+    await Promise.all(members.map(async (m) => {
       if (m !== senderId) {
         unreadUpdates[`unreadCount.${m}`] = increment(1);
+        
+        try {
+          const userDoc = await getUserById(m);
+          if (userDoc) {
+            const isViewingThisChat = userDoc.isOnline && userDoc.activeChatId === chatId;
+            
+            if (!isViewingThisChat && userDoc.fcmTokens && userDoc.fcmTokens.length > 0) {
+              const senderDoc = await getUserById(senderId);
+              
+              fetch('/api/notifications', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  tokens: userDoc.fcmTokens,
+                  title: senderDoc?.displayName || 'New Message',
+                  body: payload.text || (payload.type === 'image' ? '📷 Photo' : '🎤 Voice note'),
+                  data: { chatId }
+                })
+              }).catch(e => console.error('Push notification trigger failed', e));
+            }
+          }
+        } catch (err) {
+          console.error('Error checking smart notifications for user:', m, err);
+        }
       }
-    });
+    }));
   }
 
   await updateDoc(chatRef, {
