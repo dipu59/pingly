@@ -21,21 +21,20 @@ export default function MobileChatLayout({
   const isChatRoot = pathname === '/chat';
 
   return (
-    <div className="relative flex-1 overflow-hidden">
-      {/* Chat List — visible only on the root /chat path */}
+    <div className="relative flex-1 overflow-hidden" style={{ background: 'rgba(12,12,14,0.98)' }}>
+      {/* Chat List */}
       <div
-        className={`absolute inset-0 flex flex-col transform-gpu will-change-transform transition-transform duration-[350ms] ease-[cubic-bezier(0.32,0.72,0,1)] ${
+        className={`absolute inset-0 flex flex-col transform-gpu will-change-transform transition-transform duration-200 ease-out ${
           isChatRoot ? 'translate-x-0' : '-translate-x-full'
         }`}
-        style={{ background: 'rgba(12,12,14,0.98)' }}
         aria-hidden={!isChatRoot}
       >
         <ChatListPanel />
       </div>
 
-      {/* Main Content Area (Children) — visible on all other paths (/chat/[id], /people, /profile) */}
+      {/* Main Content Area (Chat Window) */}
       <div
-        className={`absolute inset-0 flex flex-col transform-gpu will-change-transform transition-transform duration-[350ms] ease-[cubic-bezier(0.32,0.72,0,1)] ${
+        className={`absolute inset-0 flex flex-col transform-gpu will-change-transform transition-transform duration-200 ease-out ${
           isChatRoot ? 'translate-x-full' : 'translate-x-0'
         }`}
         aria-hidden={isChatRoot}

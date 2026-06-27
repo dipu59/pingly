@@ -1,6 +1,11 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, setPersistence, browserLocalPersistence } from 'firebase/auth';
-import { getFirestore, initializeFirestore } from 'firebase/firestore';
+import { 
+  getFirestore, 
+  initializeFirestore, 
+  persistentLocalCache, 
+  persistentMultipleTabManager 
+} from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -21,7 +26,13 @@ export const auth = getAuth(app);
 if (isNewApp && typeof window !== 'undefined') {
   setPersistence(auth, browserLocalPersistence).catch(console.error);
 }
+
+// Enable offline persistence for caching chats and images (metadata)
 export const db = isNewApp 
-  ? initializeFirestore(app, { ignoreUndefinedProperties: true })
+  ? initializeFirestore(app, { 
+      localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()}),
+      ignoreUndefinedProperties: true 
+    })
   : getFirestore(app);
+
 export default app;

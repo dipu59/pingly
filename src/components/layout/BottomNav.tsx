@@ -18,17 +18,10 @@ export default function BottomNav() {
 
   const isConversationOpen = pathname?.startsWith('/chat/') && pathname !== '/chat';
 
+  if (isConversationOpen) return null;
+
   return (
-    <motion.div
-      initial={false}
-      animate={{
-        height: isConversationOpen ? 0 : 64, // 64px is h-16
-        opacity: isConversationOpen ? 0 : 1,
-        y: isConversationOpen ? 20 : 0,
-      }}
-      transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
-      className="shrink-0 overflow-hidden"
-    >
+    <div className="shrink-0 overflow-hidden">
       <nav
         className="safe-area-pb flex h-16 w-full items-center justify-around border-t glass"
         style={{ borderColor: 'var(--color-border)' }}
@@ -63,6 +56,6 @@ export default function BottomNav() {
         );
       })}
       </nav>
-    </motion.div>
+    </div>
   );
 }
